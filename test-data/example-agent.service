@@ -1,0 +1,15 @@
+[Unit]
+Description=Example Description of the Daemon.
+Documentation=https://github.com/poly-gun/steamd
+Wants=network.target
+After=syslog.target network-online.target
+
+[Service]
+ExecStart=/usr/bin/example-agent
+Environment=Variable1=value1,Variable2=value2
+StandardError=journal
+StandardOutput=journal
+Type=exec
+
+[Install]
+WantedBy=multi-user.target
