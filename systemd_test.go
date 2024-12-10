@@ -102,6 +102,8 @@ func Test(t *testing.T) {
 			t.Errorf("Failed opening agent file: %v", e)
 		}
 
+		defer handle.Close()
+
 		var buffer bytes.Buffer
 		if _, e := io.Copy(&buffer, handle); e != nil {
 			t.Errorf("Failed reading agent file into buffer: %v", e)

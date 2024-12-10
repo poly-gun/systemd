@@ -1,12 +1,16 @@
 package systemd_test
 
 import (
+	"bytes"
 	"fmt"
+	"io"
+	"os"
 
 	"github.com/poly-gun/systemd"
 )
 
 func Example() {
+	// Establish a Daemon struct and produce its final service-file contents.
 	daemon := systemd.Daemon{
 		Unit: systemd.Unit{
 			Description:   "Example Description of the Daemon.",
@@ -33,4 +37,24 @@ func Example() {
 	}
 
 	fmt.Println(string(content))
+
+	// Open up an existing service and unmarshal it into a Daemon instance pointer.
+	file, e := os.Open("test-data/example-agent.service")
+	if e != nil {
+		panic(e)
+	}
+
+	defer file.Close()
+
+	var buffer bytes.Buffer
+	if _, e := io.Copy(&buffer, file); e != nil {
+		panic(e)
+	}
+
+	instance, e := systemd.Unmarshal(buffer.Bytes())
+	if e != nil {
+		panic(e)
+	}
+
+	fmt.Println(instance)
 }
